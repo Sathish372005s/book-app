@@ -3,7 +3,8 @@ import React from 'react'
 import COLORS from '../../constants/colors'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useState } from 'react'
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
+import  useAuthStore  from '../store/Authstore';
 
 
 export default function Signup() {
@@ -13,7 +14,18 @@ export default function Signup() {
       password: "",
       secureTextEntry: true,
     });
-    const [isloading, setIsLoading] = useState(false);
+    
+    const router = useRouter();
+    const {register,user,token,isloading} =useAuthStore();
+    const handlesignup = async () => {
+      const result = await register(data.fullName, data.email, data.password);
+        if(!result.succes){
+          alert(result.error);
+        }
+        console.log("Signup Result:", result);
+        console.log("User:", user);
+        console.log("Token:", token);
+    }
   return (
     <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -72,7 +84,7 @@ export default function Signup() {
                     <Ionicons name={data.secureTextEntry ? "eye" : "eye-off"} size={20}  color={COLORS.textSecondary} style={{marginLeft: 8}} />
                 </View>
             </View>
-            <TouchableOpacity style={styles.btn} onPress={() => setIsLoading(true)}>
+            <TouchableOpacity style={styles.btn} onPress={handlesignup} disabled={isloading}>
               {isloading ? (
                 <Text style={{color: COLORS.white}}>Loading...</Text>
               ) : (
@@ -82,7 +94,10 @@ export default function Signup() {
           </View>
           {/*footer*/}
           <Text style={styles.footerText}>
-            already have account ?<Link href="(auth)">Login</Link>
+            already have account ?
+            <TouchableOpacity onPress={()=>router.back()}>
+              <Text>login</Text>
+            </TouchableOpacity>
           </Text>
       </View>
     </KeyboardAvoidingView>

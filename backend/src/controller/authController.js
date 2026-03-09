@@ -11,17 +11,14 @@ const generateToken = (id) => {
 // signup
 export const signup = async (req, res) => {
   try {
-    const { username, email, password, confirmPassword } = req.body;
+    const { username, email, password } = req.body;
 
     // validate input
-    if (!username || !email || !password || !confirmPassword) {
+    if (!username || !email || !password ) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    if (password !== confirmPassword) {
-      return res.status(400).json({ message: "Passwords do not match" });
-    }
-
+   
     // check if user already exists
     const existingUser = await User.findOne({
       $or: [{ email }, { username }],
