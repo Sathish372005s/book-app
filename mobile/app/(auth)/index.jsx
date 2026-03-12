@@ -4,8 +4,9 @@ import { StyleSheet, Text, View, Image ,TextInput,Button,Platform,TouchableOpaci
 import COLORS from '../../constants/colors.js'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useState } from 'react'
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { ScrollView } from 'react-native';
+import useAuthStore from '../store/Authstore.js';
 
 
 
@@ -16,14 +17,21 @@ export default function index() {
     secureTextEntry: true,
   });
 
-  const [isloading, setIsLoading] = useState(false);
+  const {user,token,login,loading} =useAuthStore();
+
   function changepasstype(){
     setData({...data, secureTextEntry: !data.secureTextEntry})
   }
-  function handleLogin(){
-    setIsLoading(true);
-    console.log("Logging in with", data);
-    setIsLoading(false);
+  async function handleLogin(){
+    const result= await login(data.email, data.password);
+    if(!result.success){
+      alert(result.error);
+      return;
+    }
+    alert(result.message);
+    console.log("User:", user);
+    console.log("Token:", token);
+    router.push("/(tabs)"); // Navigate to the main app after successful login
   }
 
   return (
@@ -72,7 +80,7 @@ export default function index() {
                 </View>
             </View>
             <TouchableOpacity style={styles.btn} onPress={handleLogin}>
-                {isloading ? (
+                {loading ? (
                     <ActivityIndicator size="small" color={COLORS.white} />
                 ) : (
                     <Text style={styles.btntext}>Login</Text>

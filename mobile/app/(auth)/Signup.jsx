@@ -9,22 +9,25 @@ import  useAuthStore  from '../store/Authstore';
 
 export default function Signup() {
   const [data, setData] =useState({
-      fullName: "",
+      username: "",
       email: "",
       password: "",
       secureTextEntry: true,
     });
     
     const router = useRouter();
-    const {register,user,token,isloading} =useAuthStore();
+    const {register,user,token,loading} =useAuthStore();
     const handlesignup = async () => {
-      const result = await register(data.fullName, data.email, data.password);
-        if(!result.succes){
-          alert(result.error);
-        }
-        console.log("Signup Result:", result);
+      const result = await register(data.username, data.email, data.password);
+      console.log("Signup Result:", result);
+         if (!result.success) {
+            alert(result.error);
+            return;
+          }
+        alert(result.message);
         console.log("User:", user);
         console.log("Token:", token);
+      router.push("/(auth)")
     }
   return (
     <KeyboardAvoidingView
@@ -48,8 +51,8 @@ export default function Signup() {
                       placeholder="Enter your full name"
                       style={styles.inputtext}
                       autoCapitalize="words"
-                      value={data.fullName}
-                      onChangeText={(text) => setData({ ...data, fullName: text })}
+                      value={data.username}
+                      onChangeText={(text) => setData({ ...data, username: text })}
                     />
                 </View>
             </View>
@@ -84,8 +87,8 @@ export default function Signup() {
                     <Ionicons name={data.secureTextEntry ? "eye" : "eye-off"} size={20}  color={COLORS.textSecondary} style={{marginLeft: 8}} />
                 </View>
             </View>
-            <TouchableOpacity style={styles.btn} onPress={handlesignup} disabled={isloading}>
-              {isloading ? (
+            <TouchableOpacity style={styles.btn} onPress={handlesignup} disabled={loading}>
+              {loading ? (
                 <Text style={{color: COLORS.white}}>Loading...</Text>
               ) : (
                 <Text style={{color: COLORS.white}}>Sign Up</Text>

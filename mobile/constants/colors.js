@@ -41,11 +41,12 @@ const COLORS = {
   textDark: "#0d2b43", 
   placeholderText: "#767676",
   background: "#e3f2fd", 
-  cardBackground: "#f5f9ff",
+  cardBackground: "#b0ceff",
   inputBackground: "#f0f8ff", 
   border: "#bbdefb",
   white: "#ffffff",
   black: "#000000",
+  tabbar:"#2a333c",
 };
 
 
