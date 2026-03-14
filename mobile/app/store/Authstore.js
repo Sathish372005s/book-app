@@ -11,7 +11,7 @@ const useAuthStore = create((set) => ({
         set({ loading: true });
         console.log("Sending data:", username, email, password);
         try {
-           const response = await api.post("/signup", { username, email, password });
+           const response = await api.post("/auth/signup", { username, email, password });
            const { user, token } = response.data;
            set({ user, token });
            await AsyncStorage.setItem("token", String(token));
@@ -30,7 +30,7 @@ const useAuthStore = create((set) => ({
         set({ loading: true });
         console.log("Logging in with", email, password);
         try {
-            const response = await api.post("/login", { email, password });
+            const response = await api.post("/auth/login", { email, password });
             const { user, token } = response.data;
             set({ user, token });
             await AsyncStorage.setItem("token", String(token));
@@ -64,7 +64,9 @@ const useAuthStore = create((set) => ({
         } catch (error) {
             console.log("Logout Error:", error);
         }
-    }
+    },
+
+
 }));
 
 export default useAuthStore;
