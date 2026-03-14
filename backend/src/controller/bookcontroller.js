@@ -46,8 +46,8 @@ export const createbook =async(req,res)=>{
 
 export const getbooks=async(req,res)=>{
     try {
-        const page=req.query.page || 1;
-        const limit=req.query.limit || 5;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
         const skip=(page-1)*limit;
         const books=await Book.find().skip(skip).limit(limit).populate("user","username profile.avatar");
         const totalbooks=await Book.countDocuments();
@@ -60,6 +60,16 @@ export const getbooks=async(req,res)=>{
     } catch (error) {
         console.log("get books error",error.message);
         res.status(500).json({message:"get books error"})
+    }
+}
+
+export const getmybooks=async(req,res)=>{
+    try {
+        const books = await Book.find({ user: req.user._id }).populate("user","username profile.avatar").sort({ createdAt: -1 });
+        res.status(200).json({ books });
+    } catch (error) {
+        console.log("get my books error",error.message);
+        res.status(500).json({message:"get my books error"})
     }
 }
 
